@@ -6,42 +6,42 @@ public class Player : MonoBehaviour
 {
     public Transform aimTarget;
     public Transform ball;
-    float speed = 3f; // Player's move speed
+    float speed = 3f; 
 
 
-    bool hitting; // Whether the player is hitting the ball
+    bool hitting; 
 
-    Vector3 aimTargetInitialPosition; // Initial position of the aiming target
+    Vector3 aimTargetInitialPosition; 
 
-    ShotManager shotManager; // Reference to ShotManager
-    Shot currentShot; // Current shot being executed
+    ShotManager shotManager; 
+    Shot currentShot; 
 
     private void Start()
     {
-        aimTargetInitialPosition = aimTarget.position; // Store aim target's initial position
-        shotManager = GetComponent<ShotManager>(); // Access the ShotManager component
-        currentShot = shotManager.topSpin; // Default shot
+        aimTargetInitialPosition = aimTarget.position; 
+        shotManager = GetComponent<ShotManager>(); 
+        currentShot = shotManager.topSpin; 
     }
 
     private void Update()
     {
-        float h = Input.GetAxisRaw("Horizontal"); // Horizontal input
-        float v = Input.GetAxisRaw("Vertical"); // Vertical input
+        float h = Input.GetAxisRaw("Horizontal"); 
+        float v = Input.GetAxisRaw("Vertical"); 
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            hitting = true; // Start hitting
-            currentShot = shotManager.topSpin; // Set topspin shot
+            hitting = true; 
+            currentShot = shotManager.topSpin; 
         }
         else if (Input.GetKeyUp(KeyCode.F))
         {
-            hitting = false; // Stop hitting
+            hitting = false; 
         }
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            hitting = true; // Start hitting
-            currentShot = shotManager.flat; // Set flat shot
+            hitting = true; 
+            currentShot = shotManager.flat; 
         }
         else if (Input.GetKeyUp(KeyCode.E))
         {
@@ -50,12 +50,12 @@ public class Player : MonoBehaviour
 
         if (hitting)
         {
-            aimTarget.Translate(new Vector3(h, 0, 0) * speed * 2 * Time.deltaTime); // Move aim target
+            aimTarget.Translate(new Vector3(h, 0, 0) * speed * 2 * Time.deltaTime); 
         }
 
         if ((h != 0 || v != 0) && !hitting)
         {
-            transform.Translate(new Vector3(h, 0, v) * speed * Time.deltaTime); // Move player
+            transform.Translate(new Vector3(h, 0, v) * speed * Time.deltaTime); 
         }
     }
 
@@ -66,19 +66,19 @@ public class Player : MonoBehaviour
             Rigidbody ballRigidbody = other.GetComponent<Rigidbody>();
             if (ballRigidbody != null)
             {
-                // Calculate direction vector
+               
                 Vector3 direction = (aimTarget.position - transform.position).normalized;
 
-                // Apply Newton's second law: F = ma (assuming unit mass, F = a)
+                
                 Vector3 forceVector = direction * currentShot.hitForce;
 
-                // Add vertical force for lift
+                
                 forceVector += Vector3.up * currentShot.upForce;
 
-                // Apply the velocity to the ball's rigidbody
+                
                 ballRigidbody.velocity = forceVector;
 
-                aimTarget.position = aimTargetInitialPosition; // Reset aim target
+                aimTarget.position = aimTargetInitialPosition; 
             }
         }
     }
